@@ -40,14 +40,17 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
     this.dataSource = dataSource;
   }
 
+//  @Autowired
+//  private RedisConnectionFactory connectionFactory;
+//
+//  @Bean
+//  public RedisTokenStore tokenStore() {
+//    return new RedisTokenStore(connectionFactory);
+//  }
+
   @Bean
   public JdbcTokenStore tokenStore() {
     return new JdbcTokenStore(dataSource);
-  }
-
-  @Override
-  public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-    clients.jdbc(dataSource);
   }
 
   @Override
@@ -56,6 +59,11 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
             .tokenStore(tokenStore())
             .authenticationManager(authenticationManager)
             .userDetailsService(jpaUserDetailsService);
+  }
+
+  @Override
+  public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+    clients.jdbc(dataSource);
   }
 
   @Override

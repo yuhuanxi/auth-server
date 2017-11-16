@@ -51,7 +51,7 @@ public class UserController {
    */
   @PreAuthorize("hasAuthority('super')")
   @RequestMapping(value = "/super", method = RequestMethod.GET)
-  public String createUserRoleSuper(String name) {
+  public String roleSuper(String name) {
     return "Hello World super" + name;
   }
 
@@ -63,7 +63,7 @@ public class UserController {
    */
   @PreAuthorize("hasAuthority('normal')")
   @RequestMapping(value = "/normal", method = RequestMethod.GET)
-  public String createUserRoleNormal(String name) {
+  public String roleNormal(String name) {
     return "Hello World NORMAL" + name;
   }
 
@@ -73,9 +73,22 @@ public class UserController {
    * @param name
    * @return
    */
-  @PreAuthorize("hasAuthority('super') or hasAuthority('normal')")
+//  @PreAuthorize("hasAuthority('super') or hasAuthority('normal')")
+  @PreAuthorize("hasAnyAuthority('super','normal')")
   @RequestMapping(value = "/super-normal", method = RequestMethod.GET)
-  public String createUserRoleSuperOrNormal(String name) {
+  public String roleSuperOrNormal(String name) {
+    return "Hello World SUPER OR NORMAL" + name;
+  }
+
+  /**
+   * scope 为 server 的用户可以访问
+   *
+   * @param name
+   * @return
+   */
+  @PreAuthorize("#oauth2.hasScope('server')")
+  @RequestMapping(value = "/scope", method = RequestMethod.GET)
+  public String scopeTest(String name) {
     return "Hello World SUPER OR NORMAL" + name;
   }
 
