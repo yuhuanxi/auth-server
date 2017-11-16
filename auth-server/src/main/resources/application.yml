@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/auth_test
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    #配置jpa,自动映射类到表
+  jpa:
+    database: MYSQL
+    show-sql: true
+    hibernate:
+      use-new-id-generator-mappings: true
+      ddlAuto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+          dialect: org.hibernate.dialect.MySQL5Dialect
+
+server:
+  context-path: /uaa
+  port: 5001
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://registry:8761/eureka/
+
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://127.0.0.1:5001/uaa/users/current
+      filter-order: 3

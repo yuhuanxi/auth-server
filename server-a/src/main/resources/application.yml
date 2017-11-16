@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: server-a
+
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://localhost:5001/uaa/users/current
+      filter-order: 3
+    client:
+      clientId: service
+      clientSecret: 123456
+      accessTokenUri: http://localhost:5001/uaa/oauth/token
+      grant-type: client_credentials
+      scope: server
