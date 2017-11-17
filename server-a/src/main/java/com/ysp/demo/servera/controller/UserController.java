@@ -53,11 +53,7 @@ public class UserController {
   @DeleteMapping("/user")
   public String logout(@RequestParam("user_token") String userToken) {
 
-    Map<String, Object> map = new HashMap<>();
-    map.put("user_token", userToken);
-    // 调用授权服务，创建账户
-    restTemplate.delete("http://localhost:5000/uaa/token/clear?user_token=" + userToken);
-//    restTemplate.exchange("http://localhost:5000/uaa/token/clear", HttpMethod.DELETE, map);
+    restTemplate.delete("http://localhost:5000/uaa/users/token/clear?user_token=" + userToken);
 
     return "SUCCESS";
   }
