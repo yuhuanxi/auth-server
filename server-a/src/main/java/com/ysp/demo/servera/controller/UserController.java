@@ -1,12 +1,13 @@
 package com.ysp.demo.servera.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 功能描述.
@@ -38,7 +39,25 @@ public class UserController {
     }
 
     // 调用授权服务，创建账户
-    restTemplate.postForObject("http://localhost:5001/uaa/users", user, String.class);
+    restTemplate.postForObject("http://localhost:5000/uaa/users", user, String.class);
+
+    return "SUCCESS";
+  }
+
+  /**
+   * 退出登录，清空 token
+   *
+   * @param userToken
+   * @return
+   */
+  @DeleteMapping("/user")
+  public String logout(@RequestParam("user_token") String userToken) {
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("user_token", userToken);
+    // 调用授权服务，创建账户
+    restTemplate.delete("http://localhost:5000/uaa/token/clear?user_token=" + userToken);
+//    restTemplate.exchange("http://localhost:5000/uaa/token/clear", HttpMethod.DELETE, map);
 
     return "SUCCESS";
   }

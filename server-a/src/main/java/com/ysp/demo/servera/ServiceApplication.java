@@ -65,6 +65,8 @@ public class ServiceApplication extends ResourceServerConfigurerAdapter {
     http.authorizeRequests()
             .antMatchers(HttpMethod.POST, "/user")
             .permitAll()
+            .antMatchers(HttpMethod.DELETE, "/user")
+            .permitAll()
 //            .antMatchers()
 //            .access("#oauth2.hasScope('server')")
             .antMatchers(HttpMethod.GET)

@@ -65,3 +65,4 @@ CREATE TABLE authorities
   username  VARCHAR(256) NULL,
   authority VARCHAR(256) NULL
 );
+

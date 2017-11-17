@@ -43,6 +43,19 @@ hasRole 不起作用：
 
 `oauth_client_details->access_token_validity` 单位为秒
 
+###### 1.4 获取 token
+
+```     
+curl -X "POST" "http://localhost:5001/uaa/oauth/token?username=t3&password=123456&grant_type=password" \
+     -u 'browser:123456'
+```
+
+移除 token
+
+[Spring security. How to log out user (revoke oauth2 token)](https://stackoverflow.com/questions/21987589/spring-security-how-to-log-out-user-revoke-oauth2-token)
+
+#### 2 创建数据库
+
 遇到的问题：
 
 1. hibernate sequence 问题，先删除 hibernate_sequence 表，让服务自动生成即可。

@@ -4,7 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.List;
 @Entity
 public class User implements UserDetails {
 
+  private static final Long serialVersionUID = 2142838377311328467L;
   /**
    * 一定要加，不然无法创建 bean
    */
@@ -19,14 +23,16 @@ public class User implements UserDetails {
   @GeneratedValue
   private Long id;
 
-  @Column(name = "username")
+  //  @Column(name = "username")
   private String username;
 
-  @Column(name = "password")
+  //  @Column(name = "password")
   private String password;
 
-  @Column(name = "role")
+  //  @Column(name = "role")
   private String role;
+
+  private boolean enabled;
 
   public User() {
   }
@@ -80,7 +86,11 @@ public class User implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return this.enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
   }
 
   public Long getId() {
