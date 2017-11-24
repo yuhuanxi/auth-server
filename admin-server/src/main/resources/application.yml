@@ -1,0 +1,81 @@
+---
+info:
+  scm-url: "@scm.url@"
+  build-url: "http://travis-ci.org/@env.TRAVIS_REPO_SLUG@/builds/@env.TRAVIS_BUILD_ID@"
+  stage: test
+
+logging:
+  file: "target/boot-admin-sample.log"
+
+management:
+  context-path: "/actuator"
+
+spring:
+  application:
+    name: "@pom.artifactId@"
+  boot:
+    admin:
+      url: http://localhost:8080
+  profiles:
+    active:
+      - secure
+
+---
+spring:
+  profiles: insecure
+
+management:
+  security:
+    enabled: false
+
+security:
+  basic:
+    enabled: false
+
+---
+spring:
+  profiles: secure
+  boot:
+    admin:
+      notify:
+        mail:
+          to: adobe1874@126.com
+#      username: "${security.user.name}"       #These two are needed so that the client
+#      password: "${security.user.password}"   #can register at the protected server api
+#      client:
+#        metadata:
+#          user.name: "${security.user.name}"          #These two are needed so that the server
+#          user.password:  "${security.user.password}" #can access the proteceted client endpoints
+  mail:
+    host: smtp.126.com
+
+security:
+  user:
+    name: user
+    password: pass
+
+  oauth2:
+    resource:
+      user-info-uri: http://localhost:5000/uaa/users/current
+      filter-order: 3
+    client:
+      clientId: service
+      clientSecret: 123456
+      accessTokenUri: http://localhost:5000/uaa/oauth/token
+      grant-type: client_credentials
+      scope: server
+
+eureka:
+#  instance:
+#    prefer-ip-address: true
+#    hostname: server-a
+
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://registry:8761/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}

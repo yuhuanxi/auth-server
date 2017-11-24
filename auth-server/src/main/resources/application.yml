@@ -4,7 +4,6 @@ spring:
   redis:
       host: 127.0.0.1
       port: 6379
-
   datasource:
     url: jdbc:mysql://localhost:3306/auth_test
     username: root
@@ -25,17 +24,29 @@ spring:
 
 server:
   context-path: /uaa
-  port: 5001
+  port: 5000
 
 eureka:
   instance:
-    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 10
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+#    healthCheckUrl: /uaa
+
   client:
     serviceUrl:
       defaultZone: http://registry:8761/eureka/
 
+management:
+  security:
+    enabled: false
+
 security:
+  user:
+    name: user
+    password: pass
   oauth2:
     resource:
-      user-info-uri: http://127.0.0.1:5001/uaa/users/current
+      user-info-uri: http://127.0.0.1:5000/uaa/users/current
       filter-order: 3
