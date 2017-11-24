@@ -1,0 +1,65 @@
+
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        timeout:
+#          enabled: false
+#
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 20000
+#
+#ribbon:
+#  ReadTimeout: 20000
+#  ConnectTimeout: 20000
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+
+  routes:
+
+#    legacy:
+#      path: /**
+#      url: https://api.wozaijia.com
+
+    cms-service:
+        path: /1/**
+        serviceId: server-b
+        stripPrefix: true
+        sensitiveHeaders:
+
+    first:
+      path: /zuul/main
+      serviceId: server-b
+      stripPrefix: true
+
+    second:
+      path: /zuul/ios-app-version
+      serviceId: server-b
+      stripPrefix: false
+
+    third:
+      path: /zuul/mall-ads
+      serviceId: server-b
+      stripPrefix: false
+
+server:
+  port: 9998
+
+eureka:
+#  instance:
+#    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://registry:8761/eureka/
+spring:
+  application:
+    name: gateway

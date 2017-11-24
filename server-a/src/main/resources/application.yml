@@ -1,6 +1,6 @@
 spring:
   application:
-    name: server-a
+    name: server-b
 
 security:
   oauth2:
@@ -13,3 +13,12 @@ security:
       accessTokenUri: http://localhost:5000/uaa/oauth/token
       grant-type: client_credentials
       scope: server
+
+eureka:
+#  instance:
+#    prefer-ip-address: true
+#    hostname: server-a
+
+  client:
+    serviceUrl:
+      defaultZone: http://registry:8761/eureka/

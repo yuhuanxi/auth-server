@@ -11,6 +11,7 @@
         <module>auth-server</module>
         <module>registry-server</module>
         <module>server-a</module>
+        <module>gateway</module>
     </modules>
     <packaging>pom</packaging>
     <name>auth-parent</name>

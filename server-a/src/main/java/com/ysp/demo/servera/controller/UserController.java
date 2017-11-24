@@ -25,6 +25,11 @@ public class UserController {
   @Autowired
   public UserController(RestTemplate restTemplate) {this.restTemplate = restTemplate;}
 
+  @GetMapping(value = "/")
+  public String index() {
+    return "index";
+  }
+
   @PostMapping("/user")
   public String saveUser(User user) {
 
