@@ -3,6 +3,7 @@ package com.ysp.auth.service.impls;
 import com.ysp.auth.model.User;
 import com.ysp.auth.repository.IUserRepository;
 import com.ysp.auth.service.IUserService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,13 @@ public class UserService implements IUserService {
     User existing = repository.findByUsername(user.getUsername());
     Assert.isNull(existing, "user already exists: " + user.getUsername());
 
-    String hash = ENCODER.encode(user.getPassword());
-    user.setPassword(hash);
+    String password = user.getPassword();
+
+    if (StringUtils.isNotBlank(password)) {
+      String hash = ENCODER.encode(password);
+      user.setPassword(hash);
+      user.setEnabled(Boolean.TRUE);
+    }
 
     repository.save(user);
 

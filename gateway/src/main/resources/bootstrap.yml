@@ -1,22 +1,22 @@
 
-#hystrix:
-#  command:
-#    default:
-#      execution:
-#        timeout:
-#          enabled: false
-#
-#hystrix:
-#  command:
-#    default:
-#      execution:
-#        isolation:
-#          thread:
-#            timeoutInMilliseconds: 20000
-#
-#ribbon:
-#  ReadTimeout: 20000
-#  ConnectTimeout: 20000
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
+
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
 
 zuul:
   ignoredServices: '*'
@@ -32,23 +32,23 @@ zuul:
 
     cms-service:
         path: /1/**
-        serviceId: server-b
+        serviceId: server-a
         stripPrefix: true
         sensitiveHeaders:
 
     first:
       path: /zuul/main
-      serviceId: server-b
+      serviceId: server-a
       stripPrefix: true
 
     second:
       path: /zuul/ios-app-version
-      serviceId: server-b
+      serviceId: server-a
       stripPrefix: false
 
     third:
       path: /zuul/mall-ads
-      serviceId: server-b
+      serviceId: server-a
       stripPrefix: false
 
 server:

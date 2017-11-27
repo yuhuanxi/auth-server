@@ -29,20 +29,23 @@ import de.codecentric.boot.admin.notify.filter.FilteringNotifier;
 @Profile({"secure"})
 @AutoConfigureAfter({de.codecentric.boot.admin.config.NotifierConfiguration.MailNotifierConfiguration.class})
 public class NotifierConfiguration {
-  private static final String[] ignoreChanges = {"*:UP", "UNKNOWN:OFFLINE"};
+  private static final String[] IGNORE_CHANGES = {"*:UP", "UNKNOWN:OFFLINE"};
+
+  private final MailNotifier mailNotifier;
+
   @Autowired
-  private MailNotifier mailNotifier;
+  public NotifierConfiguration(MailNotifier mailNotifier) {this.mailNotifier = mailNotifier;}
 
   @Bean
   @Primary
   public RemindingNotifier remindingNotifier() {
-    mailNotifier.setIgnoreChanges(ignoreChanges);
+    mailNotifier.setIgnoreChanges(IGNORE_CHANGES);
     RemindingNotifier notifier = new RemindingNotifier(filteringNotifier(mailNotifier));
-    notifier.setReminderPeriod(TimeUnit.HOURS.toMillis(2));
+    notifier.setReminderPeriod(TimeUnit.MINUTES.toMillis(1));
     return notifier;
   }
 
-  @Scheduled(fixedRate = 1800_000L)
+  @Scheduled(fixedRate = 1_000L)
   public void remind() {
     remindingNotifier().sendReminders();
   }
