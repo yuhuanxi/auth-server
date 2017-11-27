@@ -40,14 +40,18 @@ spring:
       notify:
         mail:
           to: adobe1874@126.com
-#      username: "${security.user.name}"       #These two are needed so that the client
-#      password: "${security.user.password}"   #can register at the protected server api
-#      client:
-#        metadata:
-#          user.name: "${security.user.name}"          #These two are needed so that the server
-#          user.password:  "${security.user.password}" #can access the proteceted client endpoints
+          from: 335747019@qq.com
   mail:
-    host: smtp.126.com
+    protocol: smtp
+    host: smtp.qq.com
+    port: 587
+    properties:
+      smtpAuth: true
+      smtpStarttlsEnable: true
+      smtpSslTrust: smtp.qq.com
+    username: 335747019@qq.com
+  # 此处为授权码
+    password: yatkaaaonamfbjih
 
 security:
   user:
