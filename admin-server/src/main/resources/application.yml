@@ -85,7 +85,6 @@ eureka:
       user.password: ${security.user.password}
 
 dingding:
-#  notify:
   enabled: true
   # 需要 @ 开发人员的状态
   need-at-state: DOWN,OFFLINE
