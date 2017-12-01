@@ -1,7 +1,9 @@
-package com.ysp.demo.admin;
+package com.ysp.demo.admin.notify;
 
-import java.util.concurrent.TimeUnit;
-
+import de.codecentric.boot.admin.notify.MailNotifier;
+import de.codecentric.boot.admin.notify.Notifier;
+import de.codecentric.boot.admin.notify.RemindingNotifier;
+import de.codecentric.boot.admin.notify.filter.FilteringNotifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
@@ -11,10 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import de.codecentric.boot.admin.notify.MailNotifier;
-import de.codecentric.boot.admin.notify.Notifier;
-import de.codecentric.boot.admin.notify.RemindingNotifier;
-import de.codecentric.boot.admin.notify.filter.FilteringNotifier;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 功能描述.

@@ -1,22 +1,20 @@
 package com.ysp.demo.admin;
 
+import com.ysp.demo.admin.notify.DingTalkNotifier;
 import de.codecentric.boot.admin.config.EnableAdminServer;
-import de.codecentric.boot.admin.notify.LoggingNotifier;
-import de.codecentric.boot.admin.notify.Notifier;
-import de.codecentric.boot.admin.notify.RemindingNotifier;
-import de.codecentric.boot.admin.notify.filter.FilteringNotifier;
+import de.codecentric.boot.admin.config.NotifierConfiguration;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * 功能描述.
@@ -63,29 +61,42 @@ public class SpringBootAdminApplication {
   }
 
   @Configuration
-  public static class NotifierConfig {
-
+  @ConditionalOnProperty(prefix = "dingding", name = "webhook-url")
+  @AutoConfigureBefore({NotifierConfiguration.NotifierListenerConfiguration.class,
+          NotifierConfiguration.CompositeNotifierConfiguration.class})
+  public static class DingTalkNotifierConfiguration {
     @Bean
-    @Primary
-    public RemindingNotifier remindingNotifier() {
-      RemindingNotifier notifier = new RemindingNotifier(filteringNotifier(loggerNotifier()));
-      notifier.setReminderPeriod(TimeUnit.SECONDS.toMillis(1));
-      return notifier;
-    }
-
-    @Scheduled(fixedRate = 1_000L)
-    public void remind() {
-      remindingNotifier().sendReminders();
-    }
-
-    @Bean
-    public FilteringNotifier filteringNotifier(Notifier delegate) {
-      return new FilteringNotifier(delegate);
-    }
-
-    @Bean
-    public LoggingNotifier loggerNotifier() {
-      return new LoggingNotifier();
+    @ConditionalOnMissingBean
+    @ConfigurationProperties("dingding")
+    public DingTalkNotifier dingTalkNotifier() {
+      return new DingTalkNotifier();
     }
   }
+
+//  @Configuration
+//  public static class NotifierConfig {
+//
+//    @Bean
+//    @Primary
+//    public RemindingNotifier remindingNotifier() {
+//      RemindingNotifier notifier = new RemindingNotifier(filteringNotifier(loggerNotifier()));
+//      notifier.setReminderPeriod(TimeUnit.SECONDS.toMillis(1));
+//      return notifier;
+//    }
+//
+//    @Scheduled(fixedRate = 1_000L)
+//    public void remind() {
+//      remindingNotifier().sendReminders();
+//    }
+//
+//    @Bean
+//    public FilteringNotifier filteringNotifier(Notifier delegate) {
+//      return new FilteringNotifier(delegate);
+//    }
+//
+//    @Bean
+//    public LoggingNotifier loggerNotifier() {
+//      return new LoggingNotifier();
+//    }
+//  }
 }

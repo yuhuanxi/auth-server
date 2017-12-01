@@ -75,6 +75,8 @@ public class ServiceApplication extends ResourceServerConfigurerAdapter {
 //            .access("#oauth2.hasScope('server')")
             .antMatchers("/zuul/**")
             .permitAll()
+            .antMatchers(HttpMethod.POST, "/zuul/**")
+            .permitAll()
             .anyRequest().authenticated();
   }
 }
