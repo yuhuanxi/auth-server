@@ -1,5 +1,6 @@
 package com.ysp.demo.admin.notify;
 
+import com.wozaijia.util.JsonUtil;
 import de.codecentric.boot.admin.event.ClientApplicationEvent;
 import de.codecentric.boot.admin.notify.AbstractStatusChangeNotifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,7 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,25 +71,33 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
     this.restTemplate = restTemplate;
   }
 
-  private HttpEntity<Map<String, Object>> createMessage(ClientApplicationEvent event) {
-    Map<String, Object> messageJson = new HashMap<>();
-    messageJson.put("msgtype", "text");
-    Map<String, Object> map = new HashMap<>();
+  private HttpEntity<String> createMessage(ClientApplicationEvent event) {
 
+    DingTalk dingTalk = new DingTalk();
+
+    DingTalk.TextBean textBean = new DingTalk.TextBean();
     String text = getText(event);
 
-    map.put("content", text);
+    textBean.setContent(text);
+    dingTalk.setText(textBean);
+
+    dingTalk.setMsgtype("text");
+
+    DingTalk.AtBean atBean = new DingTalk.AtBean();
+
+    List<String> mobiles = new ArrayList<>();
+    mobiles.add("17682310302");
+    atBean.setAtMobiles(mobiles);
 
     // 如果服务离线 或者 DOWN ,则需要 @ 开发人员
     if (text.contains(DOWN) || text.contains(OFFLINE)) {
-
+      atBean.setIsAtAll(true);
     }
-
-    messageJson.put("text", map);
+    dingTalk.setAt(atBean);
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    return new HttpEntity<>(messageJson, headers);
+    return new HttpEntity<>(JsonUtil.toJson(dingTalk), headers);
   }
 
   public URI getWebhookUrl() {
