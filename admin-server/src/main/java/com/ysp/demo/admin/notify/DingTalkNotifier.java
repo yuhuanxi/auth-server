@@ -14,48 +14,20 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Notifier submitting events to Slack.
- *
- * @author Artur Dobosiewicz
- */
 @Configuration
 @ConfigurationProperties(prefix = "dingding")
 public class DingTalkNotifier extends AbstractStatusChangeNotifier {
   private static final String DEFAULT_MESSAGE = "*#{application.name}* (#{application.id}) is *#{to.status}*";
-  private static final String DOWN = "DOWN";
-  private static final String OFFLINE = "OFFLINE";
   private final SpelExpressionParser parser = new SpelExpressionParser();
   private RestTemplate restTemplate = new RestTemplate();
-
-  /**
-   * Webhook url for Slack API (i.e. https://hooks.slack.com/services/xxx)
-   */
+  private String[] needAtState;
   private URI webhookUrl;
 
-  /**
-   * Optional channel name without # sign (i.e. somechannel)
-   */
-  private String channel;
-
-  /**
-   * Optional emoji icon without colons (i.e. my-emoji)
-   */
-  private String icon;
-
-  /**
-   * Optional username which sends notification
-   */
   private String username = "Spring Boot Admin";
+  private List<String> mobiles;
 
-  /**
-   * Message formatted using Slack markups. SpEL template using event as root
-   */
   private Expression message;
 
   public DingTalkNotifier() {
@@ -85,14 +57,15 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
 
     DingTalk.AtBean atBean = new DingTalk.AtBean();
 
-    List<String> mobiles = new ArrayList<>();
-    mobiles.add("17682310302");
     atBean.setAtMobiles(mobiles);
 
-    // 如果服务离线 或者 DOWN ,则需要 @ 开发人员
-    if (text.contains(DOWN) || text.contains(OFFLINE)) {
-      atBean.setIsAtAll(true);
+    for (String s : needAtState) {
+      if (text.contains(s)) {
+        atBean.setIsAtAll(true);
+        break;
+      }
     }
+
     dingTalk.setAt(atBean);
 
     HttpHeaders headers = new HttpHeaders();
@@ -106,22 +79,6 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
 
   public void setWebhookUrl(URI webhookUrl) {
     this.webhookUrl = webhookUrl;
-  }
-
-  public String getChannel() {
-    return channel;
-  }
-
-  public void setChannel(String channel) {
-    this.channel = channel;
-  }
-
-  public String getIcon() {
-    return icon;
-  }
-
-  public void setIcon(String icon) {
-    this.icon = icon;
   }
 
   public String getUsername() {
@@ -142,5 +99,21 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
 
   private String getText(ClientApplicationEvent event) {
     return message.getValue(event, String.class);
+  }
+
+  public String[] getNeedAtState() {
+    return needAtState;
+  }
+
+  public void setNeedAtState(String[] needAtState) {
+    this.needAtState = needAtState;
+  }
+
+  public List<String> getMobiles() {
+    return mobiles;
+  }
+
+  public void setMobiles(List<String> mobiles) {
+    this.mobiles = mobiles;
   }
 }

@@ -85,9 +85,13 @@ eureka:
       user.password: ${security.user.password}
 
 dingding:
+#  notify:
   enabled: true
+  # 需要 @ 开发人员的状态
+  need-at-state: DOWN,OFFLINE
+  mobiles:
+    - "17682310302"
   ignore-changes: #empty, nothing to ignore
   webhook-url: https://oapi.dingtalk.com/robot/send?access_token=811ccb2a35520a3e0b83040f215005f0a584103b99833e2727b9c6d534d610a7
-  channel: general
-  username: spring cloud admin
+  username: wozaijia admin
   message: "*#{application.name}* (#{application.id}) is *#{to.status}*"
