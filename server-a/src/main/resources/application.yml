@@ -34,3 +34,11 @@ eureka:
     metadata-map:
       user.name: ${security.user.name}
       user.password: ${security.user.password}
+
+# 配置日志，这里配置了日志，则 admin-server 可以监控到 log
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n %clr(%5p)"
+    file: "%d %-5level %logger : %msg%n %clr(%5p)"
+  level: info
+  file: ${LOG_FILE}

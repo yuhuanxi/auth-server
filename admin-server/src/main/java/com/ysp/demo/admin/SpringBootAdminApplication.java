@@ -61,13 +61,13 @@ public class SpringBootAdminApplication {
   }
 
   @Configuration
-  @ConditionalOnProperty(prefix = "dingding", name = "webhook-url")
+  @ConditionalOnProperty(prefix = "dingding.notify", name = "web-hook-url")
   @AutoConfigureBefore({NotifierConfiguration.NotifierListenerConfiguration.class,
           NotifierConfiguration.CompositeNotifierConfiguration.class})
   public static class DingTalkNotifierConfiguration {
     @Bean
     @ConditionalOnMissingBean
-    @ConfigurationProperties("dingding")
+    @ConfigurationProperties("dingding.notify")
     public DingTalkNotifier dingTalkNotifier() {
       return new DingTalkNotifier();
     }

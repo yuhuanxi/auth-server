@@ -11,11 +11,6 @@ import java.util.List;
  * @since V1.0
  */
 public class DingTalk {
-  /**
-   * msgtype : text
-   * text : {"content":"我就是我, 是不一样的烟火"}
-   * at : {"atMobiles":["156xxxx8827","189xxxx8325"],"isAtAll":false}
-   */
 
   private String msgtype;
   private TextBean text;
@@ -33,10 +28,23 @@ public class DingTalk {
 
   public void setAt(AtBean at) { this.at = at;}
 
+  enum MsgTypeEnum {
+    TEXT("text"),
+    MARKDOWN("markdown"),
+    LINK("link");
+
+    private String type;
+
+    MsgTypeEnum(String type) {
+      this.type = type;
+    }
+
+    public String getType() {
+      return type;
+    }
+  }
+
   public static class TextBean {
-    /**
-     * content : 我就是我, 是不一样的烟火
-     */
 
     private String content;
 
@@ -46,10 +54,6 @@ public class DingTalk {
   }
 
   public static class AtBean {
-    /**
-     * atMobiles : ["156xxxx8827","189xxxx8325"]
-     * isAtAll : false
-     */
 
     private boolean isAtAll;
     private List<String> atMobiles;

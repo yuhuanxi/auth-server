@@ -17,13 +17,14 @@ import java.net.URI;
 import java.util.List;
 
 @Configuration
-@ConfigurationProperties(prefix = "dingding")
+@ConfigurationProperties(prefix = "dingding.notify")
 public class DingTalkNotifier extends AbstractStatusChangeNotifier {
   private static final String DEFAULT_MESSAGE = "*#{application.name}* (#{application.id}) is *#{to.status}*";
   private final SpelExpressionParser parser = new SpelExpressionParser();
   private RestTemplate restTemplate = new RestTemplate();
   private String[] needAtState;
-  private URI webhookUrl;
+  private URI webHookUrl;
+  private String accessToken;
 
   private String username = "Spring Boot Admin";
   private List<String> mobiles;
@@ -36,7 +37,7 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
 
   @Override
   protected void doNotify(ClientApplicationEvent event) throws Exception {
-    restTemplate.postForEntity(webhookUrl, createMessage(event), Void.class);
+    restTemplate.postForEntity(webHookUrl + "?access_token=" + accessToken, createMessage(event), Void.class);
   }
 
   public void setRestTemplate(RestTemplate restTemplate) {
@@ -53,7 +54,7 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
     textBean.setContent(text);
     dingTalk.setText(textBean);
 
-    dingTalk.setMsgtype("text");
+    dingTalk.setMsgtype(DingTalk.MsgTypeEnum.TEXT.getType());
 
     DingTalk.AtBean atBean = new DingTalk.AtBean();
 
@@ -73,12 +74,12 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
     return new HttpEntity<>(JsonUtil.toJson(dingTalk), headers);
   }
 
-  public URI getWebhookUrl() {
-    return webhookUrl;
+  public URI getWebHookUrl() {
+    return webHookUrl;
   }
 
-  public void setWebhookUrl(URI webhookUrl) {
-    this.webhookUrl = webhookUrl;
+  public void setWebHookUrl(URI webHookUrl) {
+    this.webHookUrl = webHookUrl;
   }
 
   public String getUsername() {
@@ -115,5 +116,13 @@ public class DingTalkNotifier extends AbstractStatusChangeNotifier {
 
   public void setMobiles(List<String> mobiles) {
     this.mobiles = mobiles;
+  }
+
+  public String getAccessToken() {
+    return accessToken;
+  }
+
+  public void setAccessToken(String accessToken) {
+    this.accessToken = accessToken;
   }
 }
